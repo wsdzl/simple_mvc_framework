@@ -1,5 +1,6 @@
 from init import *
 import socket as S
+from re import split as re_split
 
 HTTPServer = I('HTTPServer')
 
@@ -42,8 +43,7 @@ class httpControler(HTTPServer):
 
 	def _split(self, url):
 		if self.conf['param_sep_re']:
-			re = _im('re')
-			params = re.split(self.conf['param_sep_re'], url)
+			params = re_split(self.conf['param_sep_re'], url)
 		else:
 			params = url.split(self.conf.get('param_sep', '/'))
 		params = [i for i in params if i]
