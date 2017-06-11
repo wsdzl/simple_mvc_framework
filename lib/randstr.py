@@ -1,5 +1,6 @@
 import random
 
+# 生成随机字符串
 def randstr(length=20, _range=None):
 	if not _range:
 		_range = '!#$%&*+-.0123456789?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'

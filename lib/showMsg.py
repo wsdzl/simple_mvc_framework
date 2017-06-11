@@ -1,3 +1,4 @@
+# 提示信息网页模板
 def showMsg(msg, isAutoGo=False, url = ''):
 	if not url:
 		url = 'javascript:history.back(-1);'

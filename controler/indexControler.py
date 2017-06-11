@@ -1,3 +1,4 @@
+# 默认控制器
 from init import *
 
 msg = I('showMsg')

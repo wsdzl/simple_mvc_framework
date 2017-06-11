@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 程序入口文件
+
 from init import *
 
+# 调用http控制器
 hc = C('http')()
 hc.start()
 
