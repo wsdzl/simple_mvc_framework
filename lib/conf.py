@@ -39,7 +39,7 @@ class conf(object):
 	# 取配置项，可指定默认数据
 	def get(self, key, default=None):
 		v = self[key]
-		if v:
+		if v != None:
 			return v
 		return default
 

@@ -47,8 +47,10 @@ class httpControler(HTTPServer):
 			}[ctlr.res_code]
 			# 执行控制器方法返回结果
 			return self.res_200(result, ctlr.res_cookies, ctlr.headers, status)
-		except:
-			# 浏览器发送参数错误
+		except Exception as e: # 浏览器发送参数错误
+			if I('conf')('debug.conf').get('open', True): # 调试
+				traceback = __import__('traceback') 
+				return self.res_200(traceback.format_exc().replace('\n','<br />').encode('utf-8'))
 			return self.error_page() # 响应错误页面
 		# 请求的控制器方法不存在
 		return self.error_page() # 响应错误页面

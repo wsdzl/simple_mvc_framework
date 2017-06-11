@@ -4,8 +4,8 @@ from init import *
 msg = I('showMsg')
 class indexControler(Controler):
 	def index(self):
-		return msg(str(self.env))
-		return b'It works!'
+		v = V('view')('index', self)
+		return v(1)
 
 	def test(self):
-		return b'Test Method!'
+		return b'Test Method!%s'
