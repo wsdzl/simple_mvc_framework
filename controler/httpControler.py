@@ -40,8 +40,13 @@ class httpControler(HTTPServer):
 		try:
 			# 将HTTP环境变量传入控制器
 			ctlr = ctlr(method, url, cookie, data, headers)
+			result = getattr(ctlr, _method)(**args)
+			status = {
+				200: b'HTTP/1.1 200 OK\r\n',
+				404: b'HTTP/1.1 404 Not Found\r\n'
+			}[ctlr.res_code]
 			# 执行控制器方法返回结果
-			return getattr(ctlr, _method)(**args)
+			return self.res_200(result, ctlr.res_cookies, ctlr.headers, status)
 		except:
 			# 浏览器发送参数错误
 			return self.error_page() # 响应错误页面
