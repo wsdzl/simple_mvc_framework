@@ -90,8 +90,6 @@ class httpControler(HTTPServer):
 			method = self.conf.get('default_controler_method', 'index')
 		# 解析传给控制器方法的URL参数
 		args = {}
-		if len(params)%2 == 1:
-			params.pop()
 		for i in range(len(params)):
 			if i%2 == 0:
 				args[params[i]] = None
