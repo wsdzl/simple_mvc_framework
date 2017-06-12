@@ -1,5 +1,6 @@
 from init import *
 from io import BytesIO
+import re
 
 class view(object):
 	L_DELIM = b'{{' # 模板表达式左分隔符
@@ -62,5 +63,25 @@ class view(object):
 
 	# 解析表达式
 	def exp2bytes(self, exp):
-		print(exp)
-		return b'Hello,world!'
+		return self._parse_var(exp)
+		
+	# 解析变量表达式
+	def _parse_var(self, exp):
+		exp = exp.split('.')
+		exp = [i for i in exp if exp]
+		result = None
+		if exp[0] == 'ENV': # 解析环境变量
+			result = self.ctlr.env
+			del exp[0]
+		else: # 解析用户数据
+			result = self.args
+		try:
+			if not len(exp):
+				return b'NULL'
+			while len(exp):
+				result = result[exp[0]]
+				del exp[0]
+		except Exception as e:
+			#raise e
+			return b'NULL'
+		return str(result).encode('utf-8')

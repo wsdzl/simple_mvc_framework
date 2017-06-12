@@ -9,7 +9,7 @@
 	<title>测试一下</title>
 </head>
 <body>
-	<h1>{{nihao}}</h1>
+	<h1>{{ENV.headers}}</h1>
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </body>
 </html>

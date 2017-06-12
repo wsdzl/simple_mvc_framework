@@ -5,7 +5,7 @@ msg = I('showMsg')
 class indexControler(Controler):
 	def index(self):
 		v = V('view')('index', self)
-		return v(1)
+		return v({'nihao': 123})
 
 	def test(self):
 		return b'Test Method!%s'

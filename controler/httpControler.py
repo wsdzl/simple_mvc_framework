@@ -50,7 +50,7 @@ class httpControler(HTTPServer):
 		except Exception as e: # 浏览器发送参数错误
 			if I('conf')('debug.conf').get('open', True): # 调试
 				traceback = __import__('traceback') 
-				return self.res_200(traceback.format_exc().replace('\n','<br />').encode('utf-8'))
+				return self.res_404(traceback.format_exc().replace('\n','<br />').encode('utf-8'))
 			return self.error_page() # 响应错误页面
 		# 请求的控制器方法不存在
 		return self.error_page() # 响应错误页面
