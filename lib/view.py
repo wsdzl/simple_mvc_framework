@@ -17,7 +17,8 @@ class view(object):
 		self._re = {
 			'var': re.compile(r'^(?:\w+\.)*\w+$'),
 			'if': re.compile(r'^\s*if +((?:\w+\.)*\w+):\s*([\S\s]+?)(?:\s+else:\s*([\S\s]+)\s*)?$'),
-			'replace_var': re.compile(r'\$\(((?:\w+\.)*\w+)\)')
+			'replace_var': re.compile(r'\$\(((?:\w+\.)*\w+)\)'),
+			'for': re.compile(r'^\s*for +([,\w ]+?) +in +((?:\w+\.)*\w+):\s*([\s\S]+)$')
 		}
 
 	# 编译模板
@@ -74,11 +75,13 @@ class view(object):
 			m = self._re['if'].match(exp)
 			if m:
 				return self._parse_if(m)
-			else:
-				return exp.encode('utf-8')
+			m = self._re['for'].match(exp)
+			if m:
+				return self._parse_for(m)
+		return b'???'
 
 	# 解析变量表达式
-	def _parse_var(self, exp):
+	def _parse_var(self, exp, _parse_bytes=True):
 		exp = exp.split('.')
 		exp = [i for i in exp if exp]
 		result = None
@@ -96,7 +99,9 @@ class view(object):
 		except Exception as e:
 			#raise e
 			return b'NULL'
-		return str(result).encode('utf-8')
+		if _parse_bytes:
+			return str(result).encode('utf-8')
+		return result
 
 	# 解析if语句表达式
 	def _parse_if(self, match):
@@ -108,6 +113,36 @@ class view(object):
 		if result:
 			result = self._replace_var(result)
 		return result.encode('utf-8')
+
+	def _parse_for(self, match):
+		match = match.groups()
+		_var = self._parse_var(match[1], False)
+		if _var == b'NULL':
+			return b'NULL'
+		localvarsli = match[0].split(',')
+		localvarsli = [i.strip() for i in localvarsli if i.strip()]
+		localvarslen = len(localvarsli)
+		varsli = set(self._re['replace_var'].findall(match[2]))
+		result = []
+		try:
+			for i in _var:
+				mapping = {}
+				if localvarslen == 1:
+					mapping[localvarsli[0]] = i
+				else:
+					for n in range(localvarslen):
+						mapping[localvarsli[n]] = i[n]
+				bf = match[2]
+				for n in varsli:
+					if n in localvarsli:
+						bf = bf.replace('$(%s)'%n, str(mapping[n]))
+					else:
+						bf = bf.replace('$(%s)'%n, self._parse_var(n).decode('utf-8'))
+				result.append(bf)
+		except Exception as e:
+			raise e
+			return b'Error'
+		return ''.join(result).encode('utf-8')
 
 	# 解析文本中变量
 	def _replace_var(self, text):

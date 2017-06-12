@@ -26,3 +26,6 @@ I = lambda name:M(name, 'lib', '')
 
 # 引入控制器基类
 Controler = I('Controler')
+
+# 引入view基类
+view = I('view')

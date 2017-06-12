@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css"></link>
 	<title>测试一下</title>
 </head>
-<body>
+<body style="text-align: center;">
 	<h1>{{ENV.headers}}</h1>
 	<h2>{{name}}</h2>
 	<h3>{{
@@ -17,6 +17,12 @@
 		else:
 			<b>Hi! </b> 
 	}}</h3>
+	<div>
+	{{
+		for href, link in li:
+			<a href='$(href)'>$(link)</a>
+	}}
+	</div>
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </body>
 </html>
