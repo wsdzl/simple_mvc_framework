@@ -140,7 +140,7 @@ class view(object):
 						bf = bf.replace('$(%s)'%n, self._parse_var(n).decode('utf-8'))
 				result.append(bf)
 		except Exception as e:
-			raise e
+			#raise e
 			return b'Error'
 		return ''.join(result).encode('utf-8')
 
