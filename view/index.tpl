@@ -10,6 +10,13 @@
 </head>
 <body>
 	<h1>{{ENV.headers}}</h1>
+	<h2>{{name}}</h2>
+	<h3>{{
+		if name:
+			你好， <b>$(name)</b>
+		else:
+			<b>Hi! </b> 
+	}}</h3>
 	<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </body>
 </html>

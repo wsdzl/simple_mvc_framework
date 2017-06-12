@@ -3,9 +3,9 @@ from init import *
 
 msg = I('showMsg')
 class indexControler(Controler):
-	def index(self):
+	def index(self, name='guest'):
 		v = V('view')('index', self)
-		return v({'nihao': 123})
+		return v({'name': name})
 
 	def test(self):
 		return b'Test Method!%s'

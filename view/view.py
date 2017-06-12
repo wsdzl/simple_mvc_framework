@@ -14,6 +14,11 @@ class view(object):
 		self._file = os.path.join(ROOT, 'view', tpl)
 		self.args = args
 		self.ctlr = ctlr
+		self._re = {
+			'var': re.compile(r'^(?:\w+\.)*\w+$'),
+			'if': re.compile(r'^\s*if +((?:\w+\.)*\w+):\s*([\S\s]+?)(?:\s+else:\s*([\S\s]+)\s*)?$'),
+			'replace_var': re.compile(r'\$\(((?:\w+\.)*\w+)\)')
+		}
 
 	# 编译模板
 	def compile(self, args=None):
@@ -63,8 +68,15 @@ class view(object):
 
 	# 解析表达式
 	def exp2bytes(self, exp):
-		return self._parse_var(exp)
-		
+		if self._re['var'].match(exp):
+			return self._parse_var(exp)
+		else:
+			m = self._re['if'].match(exp)
+			if m:
+				return self._parse_if(m)
+			else:
+				return exp.encode('utf-8')
+
 	# 解析变量表达式
 	def _parse_var(self, exp):
 		exp = exp.split('.')
@@ -85,3 +97,21 @@ class view(object):
 			#raise e
 			return b'NULL'
 		return str(result).encode('utf-8')
+
+	# 解析if语句表达式
+	def _parse_if(self, match):
+		match = match.groups()
+		if self._parse_var(match[0]) != b'NULL':
+			result = match[1]
+		else:
+			result = match[2]
+		if result:
+			result = self._replace_var(result)
+		return result.encode('utf-8')
+
+	# 解析文本中变量
+	def _replace_var(self, text):
+		varsli = set(self._re['replace_var'].findall(text))
+		for i in varsli:
+			text = text.replace('$(%s)'%i, self._parse_var(i).decode('utf-8'))
+		return text
