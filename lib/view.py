@@ -114,6 +114,7 @@ class view(object):
 			result = self._replace_var(result)
 		return result.encode('utf-8')
 
+	# 解析for语句表达式
 	def _parse_for(self, match):
 		match = match.groups()
 		_var = self._parse_var(match[1], False)

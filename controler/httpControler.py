@@ -20,6 +20,19 @@ class httpControler(HTTPServer):
 	}
 	_res_dir = os.path.join(ROOT, 'view') # 资源文件夹
 	_static_res = ['.js', '.html'] # 允许的静态资源后缀（均按静态资源发送给浏览器）
+	_res_mime = {
+		'.bmp': 'image/bmp',
+		'.git': 'image/gif',
+		'.ico': 'image/x-icon',
+		'.jpeg': 'image/jpeg',
+		'.jpg': 'image/jpeg',
+		'.jpe': 'image/jpeg',
+		'.txt': 'text/plain',
+		'.css': 'text/css',
+		'.js': 'text/javascript',
+		'.html': 'text/html',
+		'.htm': 'text/html'
+	}
 	_static_dir = ['static'] # 静态资源文件夹（文件夹下所有文件按静态资源发送给浏览器）
 
 	def __init__(self):
@@ -34,7 +47,10 @@ class httpControler(HTTPServer):
 		# 尝试在资源文件夹下读文件
 		f = self._readfile(url)
 		if f != None:
-			return self.res_200(f)
+			headers = []
+			if f[1] in self._res_mime:
+				headers = ['Content-Type: %s' % self._res_mime[f[1]]]
+			return self.res_200(f[0], headers=headers)
 		# 文件若不存在则从URL映射到控制器方法
 		ctlr, _method, args = self._split(url)
 		try:
@@ -112,14 +128,14 @@ class httpControler(HTTPServer):
 		for i in self._static_dir:
 			if tmp.startswith(i + os.path.sep):
 				inRange = True
+		ext = os.path.splitext(filename)[1]
 		if not inRange:
 			# 检查扩展名是否允许
-			ext = os.path.splitext(filename)[1]
 			if not ext in self._static_res:
 				return
 		try:
 			# 以bytes格式读入文件并返回
 			with open(filename, 'rb') as f:
-				return f.read()
+				return (f.read(),ext)
 		except:
 			return

@@ -107,7 +107,7 @@ class HTTPServer(object):
 	# 	...
 	# ]
 	def res_200(self, data, cookies=[], headers=None, status=b'HTTP/1.1 200 OK\r\n'):
-		if not headers:
+		if headers == None:
 			headers = ['Content-Type: text/html;charset=utf-8']
 		cookies = self.set_cookie(cookies)
 		if cookies:
